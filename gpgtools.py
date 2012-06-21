@@ -27,6 +27,13 @@ def save_pubkey(mongo, androidapp_id, pubkeyfile):
     return True
 
 
+def flush_db():
+    """Flush the GPG database."""
+    fp_list = [key['fingerprint'] for key in gpg.list_keys()]
+    gpg.delete_keys(fp_list, True)
+    gpg.delete_keys(fp_list)
+
+
 def verify_signature(mongo, file_signed, androidapp_id):
     """Check a file's androidapp signature."""
     v = gpg.verify_file(file_signed)

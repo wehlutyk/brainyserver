@@ -45,14 +45,23 @@ def hello():
     return 'Hello World!\n'
 
 
-@app.route('/showdata')
-def showdata():
+@app.route('/admin/show_db')
+def show_db():
     """Return the MongoDB data."""
     return mongo_all_tostring('html')
 
 
-@app.route('/uploadpubkey/<androidapp_id>', methods=['POST'])
-def uploadpubkey(androidapp_id):
+@app.route('/admin/flush_db')
+def flush_db():
+    """Flush the MongoDB and GPG data."""
+    mongo.db.drop_collection(st.MONGO_CL_AADATA)
+    mongo.db.drop_collection(st.MONGO_CL_AAFPS)
+    gpgtools.flush_db()
+    return 'Database flushed.\n'
+
+
+@app.route('/upload_pubkey/<androidapp_id>', methods=['POST'])
+def upload_pubkey(androidapp_id):
     """Process a public key uploaded for an androidapp."""
     pubkeyfile = request.files['pubkeyfile']
     
@@ -68,8 +77,8 @@ def uploadpubkey(androidapp_id):
     return 'Key saved.\n'
 
 
-@app.route('/uploaddata/<androidapp_id>', methods=['POST'])
-def uploaddata(androidapp_id):
+@app.route('/upload_data/<androidapp_id>', methods=['POST'])
+def upload_data(androidapp_id):
     """Process data uploaded by an androidapp."""
     jsonfile_signed = request.files['jsonfile_signed']
 
@@ -88,3 +97,4 @@ def uploaddata(androidapp_id):
 if __name__ == '__main__':
     app.debug = True
     app.run()
+#    app.run(host='0.0.0.0')
