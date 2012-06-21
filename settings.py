@@ -6,15 +6,14 @@
 
 # Data uploading settings
 
-ALLOWED_EXTENSIONS = set(['json_signed'])
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024
 
 
 # MongDB settings
 
 MONGO_DBNAME = 'brainyserver'
-MONGO_COLL_AADATA = 'androidapps_data'
-MONGO_COLL_AAFINGERPRINTS = 'androidapps_keyfingerprints'
+MONGO_CL_AADATA = 'androidapps_data'
+MONGO_CL_AAFPS = 'androidapps_keyfingerprints'
 
 
 # GnuPG settigns
