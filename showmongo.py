@@ -26,9 +26,12 @@ def mongo_all_tostring(fmt='raw'):
     
     for dbn in conn.database_names():
         
+        if dbn in [u'local', u'admin']:
+            continue
+        
         output += createline[fmt]()
         output += createline[fmt]('==============================')
-        output += createline[fmt]('Database: "{}"'.format(dbn))
+        output += createline[fmt]('Database: "%s"' % dbn)
         output += createline[fmt]()
         db = conn[dbn]
         
@@ -38,12 +41,12 @@ def mongo_all_tostring(fmt='raw'):
                 continue
             
             output += createline[fmt]('-----')
-            output += createline[fmt]('Collection: "{}"'.format(colln))
+            output += createline[fmt]('Collection: "%s"' % colln)
             output += createline[fmt]()
             coll = db[colln]
             
             for doc in coll.find():
-                output += createline[fmt]('{}'.format(doc))
+                output += createline[fmt]('%s' % doc)
     
     return output
 
