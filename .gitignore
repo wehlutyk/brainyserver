@@ -1,0 +1,9 @@
+# Temporary and compilation files
+*~
+*.pyc
+*.pyo
+
+# Eclipse metadata files
+.project
+.pydevproject
+.settings
