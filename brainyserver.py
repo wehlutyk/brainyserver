@@ -22,7 +22,8 @@ from showmongo import mongo_all_tostring
 
 app = Flask(__name__)
 
-app.config['MONGO_DBNAME'] = st.MONGO_DBNAME
+app.config.from_object(st)
+app.config.from_envvar('BRAINYSERVER_SETTINGS', silent=True)
 mongo = PyMongo(app)
 
 if not os.path.exists(st.GPG_HOME):
@@ -95,6 +96,4 @@ def upload_data(androidapp_id):
 
 
 if __name__ == '__main__':
-    app.debug = True
     app.run()
-#    app.run(host='0.0.0.0')

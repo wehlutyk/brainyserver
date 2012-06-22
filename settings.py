@@ -4,6 +4,13 @@
 "Settings for the application."
 
 
+# Flask app settings
+
+DEBUG = False
+HOST = '0.0.0.0'
+SECRET_KEY = 'YMWBpGgufZgC2Vy7pMu+fRBAAG0Gx1dHlrEBtZWhoby5uZXQ+iQE+BBMBAgNAhs'
+
+
 # Data uploading settings
 
 MAX_CONTENT_LENGTH = 16 * 1024 * 1024
