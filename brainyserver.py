@@ -14,7 +14,7 @@ from flask.ext.uploads import (UploadSet, configure_uploads,
 
 import uploadtools as ut
 import gpgtools
-import settings as st
+import settings_default as st
 from showmongo import mongo_all_tostring
 
 
@@ -96,4 +96,4 @@ def upload_data(androidapp_id):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')

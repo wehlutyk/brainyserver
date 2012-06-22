@@ -7,5 +7,4 @@
 # Flask app settings
 
 DEBUG = True
-HOST = '127.0.0.1'
-SECRET_KEY = 'devlopment key'
+SECRET_KEY = 'development key'
