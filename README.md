@@ -71,8 +71,8 @@ The first steps needed to upload data to the server are a bit cumbersome, but it
 
 For this, you will be using the four urls the server provides:
 
- * `<servername>:5000/upload_pubkey/<androidapp_id>`: to upload your public key
- * `<servername>:5000/upload_data/<androidapp_id>`: to upload signed data
+ * `<servername>:5000/upload/pubkey/<androidapp_id>`: to upload your public key
+ * `<servername>:5000/upload/data/<androidapp_id>`: to upload signed data
  * `<servername>:5000/admin/show_db`: to see what's stored in the server database
  * `<servername>:5000/admin/flush_db`: to empty the database and start over
 
@@ -92,7 +92,7 @@ Here's how to do it, broken down into little bits:
 
  3. You can now upload your public key to the server and associate it with your Android app ID. This is done with `curl` under GNU/Linux:
 
-    Run `curl -F pubkeyfile=@key.pub <servername>:5000/upload_pubkey/<androidapp_id>` (so in my case, `curl -F pubkeyfile=@key.pub 127.0.0.1:5000/upload_pubkey/wehlutyk_exp`). This command simulates a POST method uploading `key.pub` as the `pubkeyfile` field in a html form. The server should gratify you with a nice "`Key saved.`" message. *Careful: your upload file must have a `.pub` extension, or else the server will reject it.*
+    Run `curl -F pubkeyfile=@key.pub <servername>:5000/upload/pubkey/<androidapp_id>` (so in my case, `curl -F pubkeyfile=@key.pub 127.0.0.1:5000/upload/pubkey/wehlutyk_exp`). This command simulates a POST method uploading `key.pub` as the `pubkeyfile` field in a html form. The server should gratify you with a nice "`Key saved.`" message. *Careful: your upload file must have a `.pub` extension, or else the server will reject it.*
 
  4. At this stage, you can have a look at `<servername>:5000/admin/show_db` in a browser, which will show you what data has been stored on the server. Your public key fingerprint should show up there, associated with your Android app ID (under the `Collection: "androidapps_keyfingerprints"` line). If it doesn't, you can start over by visiting `<servername>:5000/admin/flush_db`, which will reset all databases and let you start over on clean ground (when you see "`Database flushed.`", it means everything was reset). If that still doesn't work, send me en email :-).
 
@@ -110,7 +110,7 @@ Here's how to do it, broken down into little bits:
 
     Next, sign the data: in a terminal, run `gpg --clearsign --default-key <key_id> --output test.json_signed --sign test.json` (so in my case, `gpg --clearsign --default-key F44FDE5A --output test.json_signed2 --sign test.json`). Here, again, make sure the `--sign` argument comes last, or some options won't be taken into account. The resulting `test.json_signed` file should have two sections: one with the original data, the second with the signature (the seemingly random lines of characters).
 
- 6. At long last, you can upload the *signed* data to the server by issuing `curl -F jsonfile_signed=@test.json_signed <servername>:5000/upload_data/<androidapp_id>` (so in my case, `curl -F jsonfile_signed=@test.json_signed 127.0.0.1:5000/upload_data/wehlutykexp`). Again, the server should thank you with a stern "`File uploaded.`" message. *Careful: your upload file must have a `.json_signed` extension, or else the server will reject it.*
+ 6. At long last, you can upload the *signed* data to the server by issuing `curl -F jsonfile_signed=@test.json_signed <servername>:5000/upload/data/<androidapp_id>` (so in my case, `curl -F jsonfile_signed=@test.json_signed 127.0.0.1:5000/upload/data/wehlutykexp`). Again, the server should thank you with a stern "`File uploaded.`" message. *Careful: your upload file must have a `.json_signed` extension, or else the server will reject it.*
 
     You can now check that your data was stored in the database by visiting `<servername>:5000/admin/show_db`. (You'll notice the added `_id` field, which is internal to MongoDB, and `androidapp_id` field, added by the brainyserver to identify the data.)
 
