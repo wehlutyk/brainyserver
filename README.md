@@ -13,19 +13,26 @@ Try it out
 Installing and running a server
 -------------------------------
 
-You will need:
+You will need (Ubuntu packages or PyPI packages):
 
  * To run the server:
-     * `python` >= 2.6
-     * `mongodb`
-     * `uwsgi` if you want to run in production environment
- * The web framework:
-     * `flask`
-     * `flask-uploads`
-     * `flask-pymongo` (which requires `pymongo`)
+     * `python` >= 2.6 [ubuntu]
+     * `mongodb` [ubuntu]
+     * `uwsgi` [ubuntu] and a web server if you want to run in production environment
+ * The web framework and related:
+     * `python-pymongo` [ubuntu]
+     * `python-mongoengine` [ubuntu]
+     * `python-flask` [ubuntu]
+     * `Flask-Uploads` [pypi]
+     * `Flask-PyMongo` [pypi]
+     * `flask-mongoengine` [pypi]
+     * `WTForms` [pypi]
+     * `Flask-WTF` [pypi]
+     * `Blinker` [pypi]
+     * `flask-debugtoolbar` [pypi]
  * The digital signing tools:
-     * `gnupg`
-     * `python-gnupg`
+     * `gnupg` [ubuntu]
+     * `python-gnupg` [pypi]
 
 Once you have those installed (and using `virtualenv` is a good idea for that), you can run a small test server by running `python brainyserver.py` in a terminal. This will fire up in debug mode on `127.0.0.1:5000`.
 

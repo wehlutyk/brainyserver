@@ -11,6 +11,7 @@ from flask import Flask, request, abort
 from flask.ext.pymongo import PyMongo
 from flask.ext.uploads import (UploadSet, configure_uploads,
                                patch_request_class)
+from flask_debugtoolbar import DebugToolbarExtension
 
 import brainyserver.settings_default as settings_default
 
@@ -23,6 +24,9 @@ app.config.from_object(settings_default)
 app.config.from_envvar('BRAINYSERVER_SETTINGS', silent=True)
 mongo = PyMongo(app)
 
+# FIXME: debug toolbar doesn't seem to be working
+toolbar = DebugToolbarExtension(app)
+
 if not os.path.exists(app.config['GPG_HOME']):
     os.makedirs(app.config['GPG_HOME'])
 os.chmod(app.config['GPG_HOME'], stat.S_IRWXU)
@@ -30,15 +34,9 @@ os.chmod(app.config['GPG_HOME'], stat.S_IRWXU)
 
 # Continue with imports that may need the app or mongo objects
 
+from brainyserver import views
 from brainyserver.admin import admin
 from brainyserver.upload import upload
-
-
-@app.route('/')
-def hello():
-    """Say hello."""
-    return 'Hello World!\n'
-
 
 app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(upload, url_prefix='/upload')
