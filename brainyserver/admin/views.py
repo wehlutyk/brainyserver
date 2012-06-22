@@ -6,7 +6,7 @@
 
 from brainyserver import app, mongo
 from brainyserver.admin.showmongo import mongo_all_tostring
-import brainyserver.gpgtools as gpgtools
+import brainyserver.db.gpgtools as gpgtools
 from brainyserver.admin import admin
 
 

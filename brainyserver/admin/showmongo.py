@@ -49,7 +49,3 @@ def mongo_all_tostring(fmt='raw'):
                 output += createline[fmt]('%s' % doc)
     
     return output
-
-
-if __name__ == '__main__':
-    print mongo_all_tostring()

@@ -7,7 +7,7 @@
 from flask import abort, request
 
 from brainyserver import app, mongo
-import brainyserver.gpgtools as gpgtools
+import brainyserver.db.gpgtools as gpgtools
 from brainyserver.upload import upload, us_aafps, us_aadata, tools
 
 
