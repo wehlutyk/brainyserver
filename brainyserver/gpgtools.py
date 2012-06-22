@@ -8,10 +8,10 @@ import re
 
 import gnupg
 
-import settings as st
+from brainyserver import app
 
 
-gpg = gnupg.GPG(gnupghome=st.GPG_HOME)
+gpg = gnupg.GPG(gnupghome=app.config['GPG_HOME'])
 
 
 def save_pubkey(mongo, androidapp_id, pubkeyfile):
@@ -22,8 +22,9 @@ def save_pubkey(mongo, androidapp_id, pubkeyfile):
     if r.count != 1:
         raise Exception('Error while importing public key')
     
-    mongo.db[st.MONGO_CL_AAFPS].insert({'androidapp_id': androidapp_id,
-                                        'fingerprint': r.fingerprints[0]})
+    mongo.db[app.config['MONGO_CL_AAFPS']].insert(
+                                        {'androidapp_id': androidapp_id,
+                                         'fingerprint': r.fingerprints[0]})
     return True
 
 
@@ -37,7 +38,7 @@ def flush_db():
 def verify_signature(mongo, file_signed, androidapp_id):
     """Check a file's androidapp signature."""
     v = gpg.verify_file(file_signed)
-    ref = mongo.db[st.MONGO_CL_AAFPS].find_one(
+    ref = mongo.db[app.config['MONGO_CL_AAFPS']].find_one(
                                             {'androidapp_id': androidapp_id})
     
     if v.status == 'no public key' or not ref:

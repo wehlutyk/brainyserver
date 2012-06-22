@@ -12,10 +12,7 @@ from flask.ext.pymongo import PyMongo
 from flask.ext.uploads import (UploadSet, configure_uploads,
                                patch_request_class)
 
-import uploadtools as ut
-import gpgtools
 import settings_default as st
-from showmongo import mongo_all_tostring
 
 
 # Create the Flask app, its MongDB connection, and the GnuPG home.
@@ -29,6 +26,13 @@ mongo = PyMongo(app)
 if not os.path.exists(st.GPG_HOME):
     os.makedirs(st.GPG_HOME)
 os.chmod(st.GPG_HOME, stat.S_IRWXU)
+
+
+# Continue with imports that may need the app object
+
+import uploadtools as ut
+import gpgtools
+from showmongo import mongo_all_tostring
 
 
 # Configure upload sets
@@ -93,7 +97,3 @@ def upload_data(androidapp_id):
     mongo.db[st.MONGO_CL_AADATA].insert(data)
 
     return 'File uploaded.\n'
-
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0')
