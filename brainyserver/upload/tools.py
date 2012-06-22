@@ -7,7 +7,7 @@
 import os
 import json
 
-import gpgtools
+import brainyserver.gpgtools as gpgtools
 
 
 def file_allowed(uploadset, f):
