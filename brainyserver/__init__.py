@@ -8,7 +8,7 @@ import os
 import stat
 
 from flask import Flask, request, abort
-from flask.ext.pymongo import PyMongo
+from flask.ext.mongoengine import MongoEngine
 from flask.ext.uploads import (UploadSet, configure_uploads,
                                patch_request_class)
 from flask_debugtoolbar import DebugToolbarExtension
@@ -22,9 +22,7 @@ app = Flask(__name__)
 
 app.config.from_object(settings_default)
 app.config.from_envvar('BRAINYSERVER_SETTINGS', silent=True)
-mongo = PyMongo(app)
-
-# FIXME: debug toolbar doesn't seem to be working
+mongo = MongoEngine(app)
 toolbar = DebugToolbarExtension(app)
 
 if not os.path.exists(app.config['GPG_HOME']):

@@ -13,7 +13,13 @@ Try it out
 Installing and running a server
 -------------------------------
 
-You will need (Ubuntu packages or PyPI packages):
+You will need a few packages to run the server.
+
+If you're running Ubuntu, the best way to get things running is to first install the `python-virtualenv` and `virtualenvwrapper` Ubuntu packages. To do that, open up a terminal and run `sudo apt-get install python-virtualenv virtualenvwrapper`. These programs will let you easily set up sub-environments to install python packages that are not in the Ubuntu repositories. Finally, you should close your terminal and open it up again to let virtualenvwrapper apply changes.
+
+Now you can create a virtual environment for brainyserver by running `mkvirtualenv --system-site-packages brainyserver`. You'll see the text `(brainyserver)` appear to the left of your prompt. That means the virtual environment is activated. D'ont hesitate to read more about virtualenvwrapper for better understanding (http://www.doughellmann.com/projects/virtualenvwrapper/).
+
+Here is the list of packages needed to run and test the server. Ubuntu packages can be installed by using `sudo apt-get install <packagename>`, and PyPI packages can be installed inside a virtualenv using `pip install <packagename>`.
 
  * To run the server:
      * `python` >= 2.6 [ubuntu]
@@ -28,13 +34,14 @@ You will need (Ubuntu packages or PyPI packages):
      * `flask-mongoengine` [pypi]
      * `WTForms` [pypi]
      * `Flask-WTF` [pypi]
-     * `Blinker` [pypi]
      * `flask-debugtoolbar` [pypi]
  * The digital signing tools:
      * `gnupg` [ubuntu]
      * `python-gnupg` [pypi]
+ * To test the server:
+     * `curl` [ubuntu]
 
-Once you have those installed (and using `virtualenv` is a good idea for that), you can run a small test server by running `python brainyserver.py` in a terminal. This will fire up in debug mode on `127.0.0.1:5000`.
+Once you have those installed (and using `virtualenv` is a good idea for that), you can run a small test server by running `python runserver.py` in a terminal. This will fire up in debug mode on `127.0.0.1:5000`. You can check the server is working by visiting `127.0.0.1:5000` in your browser; a page (probably blank) should show up.
 
 
 From an experimenter's point of view
@@ -83,6 +90,8 @@ For this, you will be using the four urls the server provides:
  * `<servername>:5000/admin/show_db`: to see what's stored in the server database
  * `<servername>:5000/admin/flush_db`: to empty the database and start over
 
+If you're running a test instance on your own computer, you can replace `<servername>:5000` with `127.0.0.1:5000`. If a friend has a test instance running for you, you need to put his domain name instead.
+
 ### Detailed crash-course
 
 Here's how to do it, broken down into little bits:
@@ -93,9 +102,9 @@ Here's how to do it, broken down into little bits:
 
     Open a terminal and run `gpg --gen-key`. Answer the questions asked (the default answers work well if you have no clue), and be sure to enter an *empty passphrase* (or else all your Android users will have to enter that passphrase when uploading data!).
 
-    When `gpg` is done generating the key pair, write down the key ID that appears in the output in the "`gpg: key <key_id> marked as ultimately trusted`" sentence. Mine is `F44FDE5A`. (It also appears further down, in a line that looks like "`pub   1024R/F44FDE5A 2012-06-22`".)
+    When `gpg` is done generating the key pair, inspect its output and look for the line saying "`gpg: key <key_id> marked as ultimately trusted`". Write down the <key_id> that shows up in that line, it identifies the generated key for `gpg`. In my example, it is `F44FDE5A`. (That key ID also appears further down, in a line that looks like "`pub   1024R/F44FDE5A 2012-06-22`".)
 
-     Next, export your public key to a file by running `gpg --armor --output key.pub --export <key_id>` (so in my case, `gpg --armor --output key.pub --export F44FDE5A`). The `--armor` option makes the output readable (i.e. not in binary format). Make sure you put the `--export` argument last or some option won't be taken into account.
+     Next, you can export your public key to a file. We'll call that file `key.pub`. To do that, run `gpg --armor --output key.pub --export <key_id>` (so in my case, `gpg --armor --output key.pub --export F44FDE5A`). The `--armor` option makes the output readable (i.e. not in binary format). Make sure you put the `--export` argument last or some option won't be taken into account.
 
  3. You can now upload your public key to the server and associate it with your Android app ID. This is done with `curl` under GNU/Linux:
 
@@ -115,7 +124,7 @@ Here's how to do it, broken down into little bits:
 
     to a file called `test.json`.
 
-    Next, sign the data: in a terminal, run `gpg --clearsign --default-key <key_id> --output test.json_signed --sign test.json` (so in my case, `gpg --clearsign --default-key F44FDE5A --output test.json_signed2 --sign test.json`). Here, again, make sure the `--sign` argument comes last, or some options won't be taken into account. The resulting `test.json_signed` file should have two sections: one with the original data, the second with the signature (the seemingly random lines of characters).
+    Next, sign the data: in a terminal, run `gpg --clearsign --default-key <key_id> --output test.json_signed --sign test.json` (so in my case, `gpg --clearsign --default-key F44FDE5A --output test.json_signed --sign test.json`). Here, again, make sure the `--sign` argument comes last, or some options won't be taken into account. The resulting `test.json_signed` file should have two sections: one with the original data, the second with the signature (the seemingly random lines of characters).
 
  6. At long last, you can upload the *signed* data to the server by issuing `curl -F jsonfile_signed=@test.json_signed <servername>:5000/upload/data/<androidapp_id>` (so in my case, `curl -F jsonfile_signed=@test.json_signed 127.0.0.1:5000/upload/data/wehlutykexp`). Again, the server should thank you with a stern "`File uploaded.`" message. *Careful: your upload file must have a `.json_signed` extension, or else the server will reject it.*
 
