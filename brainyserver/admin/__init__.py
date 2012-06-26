@@ -9,6 +9,6 @@ from flask import Blueprint
 from brainyserver import app
 
 
-admin = Blueprint('admin', __name__, template_folder='templates')
+admin = Blueprint('admin', __name__)
 
 from brainyserver.admin import views

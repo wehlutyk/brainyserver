@@ -4,9 +4,6 @@
 "Main file for the brainyserver server."
 
 
-import os
-import stat
-
 from flask import Flask, request, abort
 from flask.ext.mongoengine import MongoEngine
 from flask.ext.uploads import (UploadSet, configure_uploads,
@@ -24,10 +21,6 @@ app.config.from_object(settings_default)
 app.config.from_envvar('BRAINYSERVER_SETTINGS', silent=True)
 mongo = MongoEngine(app)
 toolbar = DebugToolbarExtension(app)
-
-if not os.path.exists(app.config['GPG_HOME']):
-    os.makedirs(app.config['GPG_HOME'])
-os.chmod(app.config['GPG_HOME'], stat.S_IRWXU)
 
 
 # Continue with imports that may need the app or mongo objects

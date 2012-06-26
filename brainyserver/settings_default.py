@@ -4,6 +4,9 @@
 "Settings for the application."
 
 
+from M2Crypto import EC
+
+
 # Flask app settings
 
 DEBUG = False
@@ -19,10 +22,9 @@ MAX_CONTENT_LENGTH = 16 * 1024 * 1024
 # MongDB settings
 
 MONGODB_DB = 'brainyserver'
-MONGO_CL_AADATA = 'androidapps_data'
-MONGO_CL_AAFPS = 'androidapps_keyfingerprints'
 
 
-# GnuPG settigns
+# Elliptic cryptography settings
+# THIS SHOULD NOT BE CHANGED OR ELSE NO APP SIGNATURES WILL BE VALID
 
-GPG_HOME = './gpg'
+EC_NID = EC.NID_X9_62_c2tnb431r1

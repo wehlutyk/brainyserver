@@ -13,15 +13,18 @@ from flask.ext.uploads import (UploadSet, configure_uploads,
 from brainyserver import app
 
 
-upload = Blueprint('upload', __name__, template_folder='templates')
+upload = Blueprint('upload', __name__)
 
 
 # Configure upload sets
 
 dest=lambda app: os.path.join(app.root_path, 'uploads')
-us_aadata = UploadSet('aadata', 'json_signed', default_dest=dest)
-us_aafps = UploadSet('aafps', 'pub', default_dest=dest)
-configure_uploads(app, (us_aadata, us_aafps))
+
+us_aadata = UploadSet('aadata', 'json', default_dest=dest)
+us_aapubkeys = UploadSet('aapubkeys', 'pub', default_dest=dest)
+us_aasignatures = UploadSet('aasignatures', 'sig', default_dest=dest)
+
+configure_uploads(app, (us_aadata, us_aapubkeys, us_aasignatures))
 patch_request_class(app, app.config['MAX_CONTENT_LENGTH'])
 
 
