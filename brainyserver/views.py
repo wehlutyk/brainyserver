@@ -23,7 +23,6 @@ class Register(MethodView):
     
     def get_context(self):
         form = self.form(request.form)
-
         context = {'form': form}
         return context
     
@@ -40,7 +39,7 @@ class Register(MethodView):
             r.set_password(form.password.data)
             r.save()
             session['username'] = r.username
-            return redirect(url_for('index'))
+            return redirect(url_for('user.index'))
 
         return render_template('register.html', **context)
 
@@ -54,7 +53,6 @@ class Login(MethodView):
     
     def get_context(self):
         form = self.form(request.form)
-
         context = {'form': form}
         return context
     
@@ -71,9 +69,11 @@ class Login(MethodView):
             return redirect(url_for('index'))
         
         if form.validate():
-            r = Researcher.objects(username=form.username_email.data).first()
+            r = Researcher.objects(
+                        username=form.username_email.data).first()
             if not r:
-                r = Researcher.objects(email=form.username_email.data).first()
+                r = Researcher.objects(
+                        email=form.username_email.data).first()
                 if not r:
                     form.username_email.errors += ('Username or '
                                                    'Email not found',)
@@ -84,7 +84,7 @@ class Login(MethodView):
                 return render_template('login.html', **context)
             
             session['username'] = r.username
-            return redirect(url_for('index'))
+            return redirect(url_for('user.index', username=r.username))
         
         return render_template('login.html', **context)
 

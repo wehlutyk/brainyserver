@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block page_header %}
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="span6">
+      <div class="page-header">
+        <h1>{%- if g.context['username'] == g.username -%}Your Apps <a class="btn btn-primary btn-large pull-right" href={{ url_for('.addexpapp', username=g.username) }}>Add an App</a>{%- else -%}{{ g.context['username'] }}'s Apps{%- endif -%}</h1>
+      </div>
+      {% set expapps = g.db.ExpApp.objects(owners=g.context['user']) %}
+      {% if expapps.count() == 0 %}
+      <p>{%- if g.context['username'] == g.username -%}You haven't{%- else -%}{{ g.context.username }} hasn't{%- endif %} created any apps yet.</p>
+      {% else %}
+      <div class="table-striped">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Description</th>
+              <th># Results</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for expapp in expapps %}
+            <tr>
+              <td>{{ expapp.ea_id }}</td>
+              <td>{{ expapp.description }}</td>
+              <td>{{ expapp.results|length }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
