@@ -12,8 +12,11 @@ from brainyserver import mongo
 class Researcher(mongo.Document):
     username = mongo.StringField(required=True, unique=True, min_length=3,
                                  max_length=50)
-    email = mongo.EmailField(required=True, unique=True)
+    email = mongo.EmailField(required=True, unique=True, min_length=3,
+                             max_length=50)
     expapps = mongo.ListField(mongo.ReferenceField('ExpApp'))
+    pwsalt = mongo.StringField(required=True)
+    pwhash = mongo.StringField(required=True)
 
 
 class Result(mongo.DynamicEmbeddedDocument):

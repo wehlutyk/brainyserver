@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Brainyserver</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <link rel="stylesheet" href={{ url_for('static', filename='css/bootstrap.css') }}>
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+    </style>
+    <link rel="stylesheet" href={{ url_for('static', filename='css/bootstrap-responsive.css') }}>
+
+  </head>
+
+  <body>
+
+    {%- block topbar -%}
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">Brainyserver</a>
+          <a class="btn btn-primary pull-right" href={{ url_for('register') }}>Register</a>
+          <a class="btn pull-right" href="">Login</a>
+          <div class="nav-collapse">
+            <ul class="nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+    {%- endblock -%}
+
+    <div class="container">
+      <div class="content">
+        {% block page_header %}{% endblock %}
+        {% block content %}{% endblock %}
+      </div>
+    </div>
+    <!--
+    <footer>
+        <p>&copy; Brainyserver 2012</p>
+    </footer>
+    -->
+    {%- block js_footer -%}
+    <script src={{ url_for('static', filename='js/jquery.js') }}></script>
+    <script src={{ url_for('static', filename='js/bootstrap.js') }}></script>
+    {%- endblock -%}
+  </body>
+</html>

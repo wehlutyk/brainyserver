@@ -9,8 +9,9 @@ import json
 
 from flask import request
 
+from brainyserver import crypto
 from brainyserver.upload import (upload, us_maipubkeys, us_eadata,
-                                 us_maisignatures, crypto)
+                                 us_maisignatures)
 from brainyserver.mongodb import MetaAppInstance, ExpApp, Result
 
 

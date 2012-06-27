@@ -29,6 +29,7 @@ Here is the list of packages needed to run and test the server. Ubuntu packages 
      * `python-pymongo` [ubuntu]
      * `python-mongoengine` [ubuntu]
      * `python-flask` [ubuntu]
+     * `Flask-Script` [pypi] 
      * `Flask-Uploads` [pypi]
      * `Flask-PyMongo` [pypi]
      * `flask-mongoengine` [pypi]
