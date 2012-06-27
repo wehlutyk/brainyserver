@@ -9,67 +9,74 @@ import json
 
 from flask import request
 
-from brainyserver.upload import (upload, us_aapubkeys, us_aadata,
-                                 us_aasignatures, crypto)
-from brainyserver.mongodb import AndroidApp, Result
+from brainyserver.upload import (upload, us_maipubkeys, us_eadata,
+                                 us_maisignatures, crypto)
+from brainyserver.mongodb import MetaAppInstance, ExpApp, Result
 
 
 def file_allowed(uploadset, f):
     return uploadset.file_allowed(f, os.path.basename(f.filename))
 
 
-@upload.route('/pubkey/<aa_id>', methods=['POST'])
-def pubkey(aa_id):
-    """Process a public key uploaded for an androidapp."""
+@upload.route('/mai_pubkey/<mai_id>', methods=['POST'])
+def mai_pubkey(mai_id):
+    """Process a public key uploaded for a MetaAppInstance."""
     pubkeyfile = request.files['pubkeyfile']
     
     if not pubkeyfile:
         return 'No pubkeyfile uploaded -> key not uploaded.\n'
     
-    if not file_allowed(us_aapubkeys, pubkeyfile):
+    if not file_allowed(us_maipubkeys, pubkeyfile):
         return 'Filetype not allowed -> key not uploaded.\n'
     
-    if AndroidApp.objects(aa_id=aa_id).count() >= 1:
-        return ('This Android App (id={}) already exists and has a key '
-                '-> key not uploaded.\n').format(aa_id)
+    if MetaAppInstance.objects(mai_id=mai_id).count() >= 1:
+        return ('This Meta App Instance (id={}) already exists and has a key '
+                '-> key not uploaded.\n').format(mai_id)
     
-    aa = AndroidApp(aa_id=aa_id, pubkey=pubkeyfile.read())
-    aa.save()
+    mai = MetaAppInstance(mai_id=mai_id, pubkey_ec=pubkeyfile.read())
+    mai.save()
     
     return 'Key saved.\n'
 
 
-@upload.route('/data/<aa_id>', methods=['POST'])
-def data(aa_id):
-    """Process data uploaded by an androidapp."""
+@upload.route('/ea_data/<mai_id>/<ea_id>', methods=['POST'])
+def ea_data(mai_id, ea_id):
+    """Process data uploaded by a MetaAppInstance for an ExpApp."""
     datafile = request.files['datafile']
     sigfile = request.files['sigfile']
     
     if not datafile:
         return 'No datafile uploaded -> no data uploaded.\n'
     
-    if not file_allowed(us_aadata, datafile):
+    if not file_allowed(us_eadata, datafile):
         return 'Filetype not allowed -> no data uploaded.\n'
     
     if not sigfile:
         return 'No sigfile uploaded -> no data uploaded.\n'
     
-    if not file_allowed(us_aasignatures, sigfile):
+    if not file_allowed(us_maisignatures, sigfile):
         return 'Filetype not allowed -> no data uploaded.\n'
     
-    datastring = datafile.read()
-    ecv = crypto.ECVerifier(aa_id)
+    mais = MetaAppInstance.objects(mai_id=mai_id)
+    if len(mais) == 0:
+        return ('Unknown MetaAppInstance (id={}) -> no data '
+                'uploaded.\n').format(mai_id)
     
-    if not ecv:
-        return ('Unknown Android app ID (id={}) -> no data '
-                'uploaded.\n').format(aa_id)
+    mai = mais[0]
+    ecv = crypto.ECVerifier(mai)
+    datastring = datafile.read()
     
     if not ecv.verify(datastring, sigfile):
         return 'Signature invalid -> no data uploaded.\n'
     
-    aa = AndroidApp.objects(aa_id=aa_id)[0]
+    eas = ExpApp.objects(ea_id=ea_id)
+    if len(eas) == 0:
+        return ('Unknown ExpApp (id={}) -> no data '
+                'uploaded.\n').format(ea_id)
+    ea = eas[0]
     r = Result(**json.loads(datastring))
-    aa.results.append(r)
-    aa.save()
+    r.metaappinstance = mai
+    ea.results.append(r)
+    ea.save()
 
     return 'Data uploaded.\n'

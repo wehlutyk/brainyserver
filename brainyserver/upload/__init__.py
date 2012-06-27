@@ -20,11 +20,11 @@ upload = Blueprint('upload', __name__)
 
 dest=lambda app: os.path.join(app.root_path, 'uploads')
 
-us_aadata = UploadSet('aadata', 'json', default_dest=dest)
-us_aapubkeys = UploadSet('aapubkeys', 'pub', default_dest=dest)
-us_aasignatures = UploadSet('aasignatures', 'sig', default_dest=dest)
+us_eadata = UploadSet('eadata', 'json', default_dest=dest)
+us_maipubkeys = UploadSet('maipubkeys', 'pub', default_dest=dest)
+us_maisignatures = UploadSet('maisignatures', 'sig', default_dest=dest)
 
-configure_uploads(app, (us_aadata, us_aapubkeys, us_aasignatures))
+configure_uploads(app, (us_eadata, us_maipubkeys, us_maisignatures))
 patch_request_class(app, app.config['MAX_CONTENT_LENGTH'])
 
 

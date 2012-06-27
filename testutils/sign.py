@@ -3,10 +3,14 @@
 
 """Sign a file with a given ECDSA key."""
 
-
+import os
+import sys
 from argparse import ArgumentParser
 from hashlib import sha512
 
+# Add parent folder to path to import bsontools
+parentfolder = os.path.split(os.path.split(os.path.realpath(__file__))[0])[0]
+sys.path.insert(0, parentfolder)
 import bsontools
 from M2Crypto.EC import load_key
 
