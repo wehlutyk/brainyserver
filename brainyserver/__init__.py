@@ -10,15 +10,14 @@ from flask.ext.uploads import (UploadSet, configure_uploads,
                                patch_request_class)
 from flask_debugtoolbar import DebugToolbarExtension
 
-import brainyserver.settings_default as settings_default
+import brainyserver.settings as settings
 
 
 # Create the Flask app, its MongDB connection, and the GnuPG home.
 
 app = Flask(__name__)
 
-app.config.from_object(settings_default)
-app.config.from_envvar('BRAINYSERVER_SETTINGS', silent=True)
+app.config.from_object(settings)
 mongo = MongoEngine(app)
 toolbar = DebugToolbarExtension(app)
 
@@ -31,3 +30,7 @@ from brainyserver.upload import upload
 
 app.register_blueprint(admin, url_prefix='/admin')
 app.register_blueprint(upload, url_prefix='/upload')
+
+
+if __name__ == '__main__':
+    app.run()

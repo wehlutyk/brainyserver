@@ -73,6 +73,7 @@ def ea_data(mai_id, ea_id):
     if len(eas) == 0:
         return ('Unknown ExpApp (id={}) -> no data '
                 'uploaded.\n').format(ea_id)
+                
     ea = eas[0]
     r = Result(**json.loads(datastring))
     r.metaappinstance = mai

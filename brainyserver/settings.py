@@ -9,8 +9,7 @@ from M2Crypto import EC
 
 # Flask app settings
 
-DEBUG = False
-SECRET_KEY = 'YMWBpGgufZgC2Vy7pMu+fRBAAG0Gx1dHlrEBtZWhoby5uZXQ+iQE+BBMBAgNAhs'
+SECRET_KEY = 'development key'
 DEBUG_TB_INTERCEPT_REDIRECTS = False
 
 
