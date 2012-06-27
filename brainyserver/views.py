@@ -39,6 +39,7 @@ class Register(MethodView):
             r = Researcher(username=form.username.data, email=form.email.data)
             r.set_password(form.password.data)
             r.save()
+            session['username'] = r.username
             return redirect(url_for('index'))
 
         return render_template('register.html', **context)
