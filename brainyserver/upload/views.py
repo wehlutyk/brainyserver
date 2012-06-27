@@ -58,24 +58,22 @@ def ea_data(mai_id, ea_id):
     if not file_allowed(us_maisignatures, sigfile):
         return 'Filetype not allowed -> no data uploaded.\n'
     
-    mais = MetaAppInstance.objects(mai_id=mai_id)
-    if len(mais) == 0:
+    mai = MetaAppInstance.objects(mai_id=mai_id).first()
+    if not mai:
         return ('Unknown MetaAppInstance (id={}) -> no data '
                 'uploaded.\n').format(mai_id)
     
-    mai = mais[0]
     ecv = crypto.ECVerifier(mai)
     datastring = datafile.read()
     
     if not ecv.verify(datastring, sigfile):
         return 'Signature invalid -> no data uploaded.\n'
     
-    eas = ExpApp.objects(ea_id=ea_id)
-    if len(eas) == 0:
+    ea = ExpApp.objects(ea_id=ea_id).first()
+    if not ea:
         return ('Unknown ExpApp (id={}) -> no data '
                 'uploaded.\n').format(ea_id)
-                
-    ea = eas[0]
+    
     r = Result(**json.loads(datastring))
     r.metaappinstance = mai
     ea.results.append(r)

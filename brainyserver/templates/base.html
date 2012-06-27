@@ -32,12 +32,26 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="#">Brainyserver</a>
+          <a class="brand" href={{ url_for('index') }}>Brainyserver</a>
+          {% if 'username' in session %}
+          <div class="btn-group pull-right">
+            <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+              <i class="icon-user"></i> {{ session['username'] }}
+              <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+              <li><a href="#">Profile</a></li>
+              <li class="divider"></li>
+              <li><a href={{ url_for('logout') }}>Sign Out</a></li>
+            </ul>
+          </div>
+          {% else %}
           <a class="btn btn-primary pull-right" href={{ url_for('register') }}>Register</a>
-          <a class="btn pull-right" href="">Login</a>
+          <a class="btn pull-right" href={{ url_for('login') }}>Login</a>
+          {% endif %}
           <div class="nav-collapse">
             <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
+              <li class="active"><a href={{ url_for('index') }}>Home</a></li>
               <li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>
             </ul>

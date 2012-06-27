@@ -29,8 +29,9 @@ def gen_salt():
     return sha512_hash_hex(presalt)
 
 
-def encrypt_password(pw):
-    pwsalt = gen_salt()
+def encrypt_password(pw, pwsalt=None):
+    if pwsalt == None:
+        pwsalt = gen_salt()
     return pwsalt, sha512_hash_hex(pwsalt + pw)
 
 

@@ -32,7 +32,14 @@ class RegisterForm(Form):
                                         validators.Email(),
                                         EmailMongoValidator()])
     password = PasswordField('Password', [validators.Length(min=8,
-                        message='Password must be at least 8 characters long')])
+                    message='Password must be at least 8 characters long')])
     confirmpassword = PasswordField('Confirm password',
                                     [validators.EqualTo('password',
                                                     "Passwords don't match")])
+
+
+class LoginForm(Form):
+    username_email = TextField('Username or Email',
+                               [validators.Length(min=3, max=50)])
+    password = PasswordField('Password',
+                [validators.Required(message='Please type in your password')])

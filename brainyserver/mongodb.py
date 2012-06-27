@@ -7,6 +7,7 @@
 import datetime
 
 from brainyserver import mongo
+from brainyserver.crypto import encrypt_password
 
 
 class Researcher(mongo.Document):
@@ -17,6 +18,15 @@ class Researcher(mongo.Document):
     expapps = mongo.ListField(mongo.ReferenceField('ExpApp'))
     pwsalt = mongo.StringField(required=True)
     pwhash = mongo.StringField(required=True)
+    
+    def set_password(self, pw):
+        pwsalt, pwhash = encrypt_password(pw)
+        self.pwsalt = pwsalt
+        self.pwhash = pwhash
+    
+    def check_password(self, pw):
+        pwsalt, pwhash = encrypt_password(pw, str(self.pwsalt))
+        return pwhash == str(self.pwhash)
 
 
 class Result(mongo.DynamicEmbeddedDocument):

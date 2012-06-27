@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% import "_forms.html" as forms %}
+
+{% block page_header %}
+  <div class="page-header">
+    <h1>Log in</h1>
+  </div>
+{% endblock %}
+
+{% block content %}
+  <form action={{ url_for('login') }} method="post">
+    {{ forms.render(form) }}
+    <div class="actions">
+      <input type="submit" class="btn btn-primary" value="Log in">
+    </div>
+  </form>
+{% endblock %}
