@@ -9,6 +9,7 @@ Now when a user completes an experiment, data needs to be sent back to the resea
 Try it out
 ==========
 
+**THIS DOCUMENTATION IS OUTDATED! WILL BE UPDATED SHORTLY.**
 
 Installing and running a server
 -------------------------------
@@ -42,7 +43,7 @@ Here is the list of packages needed to run and test the server. Ubuntu packages 
  * To test the server:
      * `curl` [ubuntu]
 
-Once you have those installed (and using `virtualenv` is a good idea for that), you can run a small test server by running `python runserver.py` in a terminal. This will fire up in debug mode on `127.0.0.1:5000`. You can check the server is working by visiting `127.0.0.1:5000` in your browser; a page (probably blank) should show up.
+Once you have those installed (and using `virtualenv` is a good idea for that), you can run a small test server by running `python manage.py runserver` in a terminal. This will fire up in debug mode on `127.0.0.1:5000`. You can check the server is working by visiting `127.0.0.1:5000` in your browser; a page (probably blank) should show up.
 
 
 From an experimenter's point of view

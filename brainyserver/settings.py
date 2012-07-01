@@ -23,7 +23,7 @@ MAX_CONTENT_LENGTH = 16 * 1024 * 1024
 MONGODB_DB = 'brainyserver'
 
 
-# Elliptic cryptography settings
+# Elliptic Curve cryptography settings
 # THIS SHOULD NOT BE CHANGED OR ELSE NO APP SIGNATURES WILL BE VALID
 
-EC_NID = EC.NID_X9_62_c2tnb431r1
+EC_NID = EC.NID_sect571k1

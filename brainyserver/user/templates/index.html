@@ -20,6 +20,7 @@
               <th>ID</th>
               <th>Description</th>
               <th># Results</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -28,6 +29,7 @@
               <td>{{ expapp.ea_id }}</td>
               <td>{{ expapp.description }}</td>
               <td>{{ expapp.results|length }}</td>
+              <td><a class="btn btn-small pull-right" href="#">Explore App</a></td>
             </tr>
             {% endfor %}
           </tbody>

@@ -47,11 +47,11 @@ class AddExpApp(MethodView):
         return context
     
     def get(self, **kwargs):
-        context = self.get_context()
+        context = self.get_context(**kwargs)
         return render_template('addexpapp.html', **context)
     
     def post(self, **kwargs):
-        context = self.get_context(kwargs)
+        context = self.get_context(**kwargs)
         g.context = context
         form = context.get('form')
         
