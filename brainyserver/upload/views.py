@@ -32,7 +32,7 @@ def mai_pubkey(mai_id):
     
     if MetaAppInstance.objects(mai_id=mai_id).count() >= 1:
         return ('This Meta App Instance (id=%s) already exists and has a key '
-                '-> key not uploaded.\n' % mai_id)
+                '-> key not uploaded.\n') % mai_id
     
     mai = MetaAppInstance(mai_id=mai_id, pubkey_ec=pubkeyfile.read())
     mai.save()
@@ -60,8 +60,8 @@ def ea_data(mai_id, ea_id):
     
     mai = MetaAppInstance.objects(mai_id=mai_id).first()
     if not mai:
-        return ('Unknown MetaAppInstance (id={}) -> no data '
-                'uploaded.\n').format(mai_id)
+        return ('Unknown MetaAppInstance (id=%s) -> no data '
+                'uploaded.\n') % mai_id
     
     ecv = crypto.ECVerifier(mai)
     datastring = datafile.read()
@@ -71,8 +71,8 @@ def ea_data(mai_id, ea_id):
     
     ea = ExpApp.objects(ea_id=ea_id).first()
     if not ea:
-        return ('Unknown ExpApp (id={}) -> no data '
-                'uploaded.\n').format(ea_id)
+        return ('Unknown ExpApp (id=%s) -> no data '
+                'uploaded.\n') % ea_id
     
     r = Result(**json.loads(datastring))
     r.metaappinstance = mai
