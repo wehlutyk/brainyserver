@@ -8,10 +8,6 @@ import sys
 from argparse import ArgumentParser
 from hashlib import sha512
 
-# Add parent folder to path to import bsontools
-parentfolder = os.path.split(os.path.split(os.path.realpath(__file__))[0])[0]
-sys.path.insert(0, parentfolder)
-import bsontools
 from M2Crypto.EC import load_key
 
 
@@ -32,17 +28,14 @@ class ECSigner(object):
         sha.update(datastring)
         return sha.digest()
     
-    def sigtuple_to_bson(self, (r, s)):
-        return bsontools.dumps({'r': r, 's': s})
-    
     def sign(self, datastring):
         digest = self.digest(datastring)
-        return self._ec.sign_dsa(digest)
+        return self._ec.sign_dsa_asn1(digest)
     
     def sign_all(self):
         for fname in self.args.files:
             with open(fname, 'rb') as f, open(fname + '.sig', 'wb') as sigf:
-                b = self.sigtuple_to_bson(self.sign(f.read()))
+                b = self.sign(f.read())
                 sigf.write(b)
 
 

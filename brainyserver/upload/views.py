@@ -31,8 +31,8 @@ def mai_pubkey(mai_id):
         return 'Filetype not allowed -> key not uploaded.\n'
     
     if MetaAppInstance.objects(mai_id=mai_id).count() >= 1:
-        return ('This Meta App Instance (id={}) already exists and has a key '
-                '-> key not uploaded.\n').format(mai_id)
+        return ('This Meta App Instance (id=%s) already exists and has a key '
+                '-> key not uploaded.\n' % mai_id)
     
     mai = MetaAppInstance(mai_id=mai_id, pubkey_ec=pubkeyfile.read())
     mai.save()
