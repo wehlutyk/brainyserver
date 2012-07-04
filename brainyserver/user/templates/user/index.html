@@ -5,7 +5,7 @@
 
 {% block content %}
   <div class="row">
-    <div class="span6">
+    <div class="span12">
       <div class="page-header">
         <h1>{%- if g.context['username'] == g.username -%}Your Apps <a class="btn btn-primary btn-large pull-right" href={{ url_for('.addexpapp', username=g.username) }}>Add an App</a>{%- else -%}{{ g.context['username'] }}'s Apps{%- endif -%}</h1>
       </div>

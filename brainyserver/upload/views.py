@@ -6,8 +6,9 @@
 
 import os
 import json
+import time
 
-from flask import request
+from flask import request, abort
 
 from brainyserver import crypto
 from brainyserver.upload import (upload, us_maipubkeys, us_eadata,
@@ -80,3 +81,22 @@ def ea_data(mai_id, ea_id):
     ea.save()
 
     return 'Data uploaded.\n'
+
+
+@upload.route('/request_mai_id')
+def request_mai_id():
+    """Generate an unused mai_id."""
+    max_tries = 20
+    found = False
+    
+    for i in range(max_tries):
+        mai_id = crypto.sha512_hash_hex(str(request.headers) +
+                                        str(time.time()))
+        if MetaAppInstance.objects(mai_id=mai_id).count() == 0:
+            found = True
+            break
+    
+    if not found:
+        abort(500)
+    
+    return mai_id

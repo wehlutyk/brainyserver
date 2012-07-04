@@ -12,7 +12,7 @@
         {{ field(class_="span3") }}
       {% endif %}
       {% if field.errors or field.help_text %}
-        <span class="help-inline">
+        <span class="help-block">
         {% if field.errors %}
           {{ field.errors|join(' ') }}
         {% else %}

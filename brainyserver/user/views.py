@@ -48,7 +48,7 @@ class AddExpApp(MethodView):
     
     def get(self, **kwargs):
         context = self.get_context(**kwargs)
-        return render_template('addexpapp.html', **context)
+        return render_template('user/addexpapp.html', **context)
     
     def post(self, **kwargs):
         context = self.get_context(**kwargs)
