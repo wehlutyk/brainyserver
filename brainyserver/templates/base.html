@@ -40,19 +40,20 @@
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
-              <li><a href={{ url_for('user.index', username=g.username) }}>Home</a></li>
+              <li><a href="#">Settings</a></li>
               <li class="divider"></li>
               <li><a href={{ url_for('logout') }}>Sign Out</a></li>
             </ul>
           </div>
+          <a class="btn pull-right" href={{ url_for('user.index', username=g.username) }}><i class="icon-home"></i> Home</a>
           {% else %}
           <a class="btn btn-primary pull-right" href={{ url_for('login') }}>Log in</a>
           <a class="btn pull-right" href={{ url_for('register') }}>Register</a>
           {% endif %}
           <div class="nav-collapse">
             <ul class="nav">
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li><a href={{ url_for('about') }}>About</a></li>
+              <li><a href={{ url_for('contact') }}>Contact</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
