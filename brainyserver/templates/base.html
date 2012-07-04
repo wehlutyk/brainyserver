@@ -47,7 +47,12 @@
           </div>
           <a class="btn pull-right" href={{ url_for('user.index', username=g.username) }}><i class="icon-home"></i> Home</a>
           {% else %}
-          <a class="btn btn-primary pull-right" href={{ url_for('login') }}>Log in</a>
+        {% if request.path in ['/', '/login'] %}
+          {% set redir_url = request.args.get('return_to') %}
+        {% else %}
+          {% set redir_url = request.path %}
+        {% endif %}
+          <a class="btn btn-primary pull-right" href={{ url_for('login', return_to=redir_url) }}>Log in</a>
           <a class="btn pull-right" href={{ url_for('register') }}>Register</a>
           {% endif %}
           <div class="nav-collapse">

@@ -12,8 +12,8 @@ from brainyserver.crypto import encrypt_password
 
 
 class Researcher(mongo.Document):
-    username = mongo.StringField(required=True, unique=True, min_length=3,
-                                 max_length=50)
+    username = mongo.StringField(regex='^[a-zA-Z0-9_-]+$', required=True,
+                                 unique=True, min_length=3, max_length=50)
     email = mongo.EmailField(required=True, unique=True, min_length=3,
                              max_length=50)
     expapps = mongo.ListField(mongo.ReferenceField('ExpApp'))
@@ -39,7 +39,7 @@ class Result(mongo.DynamicEmbeddedDocument):
 class ExpApp(mongo.Document):
     ea_id = mongo.StringField(regex='^[a-zA-Z0-9_-]+$', required=True,
                               unique=True, min_length=3, max_length=50)
-    description = mongo.StringField(max_length=100)
+    description = mongo.StringField(max_length=300)
     owners = mongo.ListField(mongo.ReferenceField(Researcher), required=True)
     results = mongo.ListField(mongo.EmbeddedDocumentField(Result))
 

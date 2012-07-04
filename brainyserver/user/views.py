@@ -35,34 +35,24 @@ class Index(MethodView):
 user.add_url_rule('/', view_func=Index.as_view('index'))
 
 
-class AddExpApp(MethodView):
-    
-    form = AddExpAppForm
+class Explore(MethodView):
     
     def get_context(self, **kwargs):
         username = kwargs['username']
-        form = self.form(request.form)
         user = Researcher.objects(username=username).first()
-        context = {'form': form, 'username': username, 'user': user}
+        ea_id = kwargs['ea_id']
+        ea = ExpApp.objects(ea_id=ea_id).first()
+        context = {'username': username, 'user': user, 'ea_id': ea_id,
+                   'ea': ea}
         return context
     
     def get(self, **kwargs):
         context = self.get_context(**kwargs)
-        return render_template('user/addexpapp.html', **context)
-    
-    def post(self, **kwargs):
-        context = self.get_context(**kwargs)
-        g.context = context
-        form = context.get('form')
+        if context['username'] != g.username:
+            abort(403)
         
-        if form.validate():
-            ea = ExpApp(ea_id=form.ea_id.data,
-                        description=form.description.data)
-            ea.owners.append(g.user)
-            ea.save()
-            return redirect(url_for('.index', username=g.username))
-
-        return render_template('user/addexpapp.html', **context)
+        g.context = context
+        return render_template('user/exploreexpapp.html')
 
 
-user.add_url_rule('/addexpapp', view_func=AddExpApp.as_view('addexpapp'))
+user.add_url_rule('/<ea_id>', view_func=Explore.as_view('exploreexpapp'))

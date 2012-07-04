@@ -4,12 +4,13 @@
 """Views for the root of the app."""
 
 
-from flask import render_template, request, redirect, url_for, session
+from flask import (render_template, request, redirect, url_for, session,
+                   abort, g)
 from flask.views import MethodView
 
 from brainyserver import app
-from brainyserver.forms import RegisterForm, LoginForm
-from brainyserver.mongodb import Researcher
+from brainyserver.forms import RegisterForm, LoginForm, AddExpAppForm
+from brainyserver.mongodb import Researcher, ExpApp
 
 
 @app.route('/')
@@ -53,15 +54,18 @@ class Login(MethodView):
     
     def get_context(self):
         form = self.form(request.form)
-        context = {'form': form}
+        return_to = request.args.get('return_to')
+        context = {'form': form, 'return_to': return_to}
         return context
     
     def get(self):
         context = self.get_context()
+        g.context = context
         return render_template('login.html', **context)
     
     def post(self):
         context = self.get_context()
+        g.context = context
         form = context.get('form')
         
         if 'username' in session:
@@ -84,7 +88,11 @@ class Login(MethodView):
                 return render_template('login.html', **context)
             
             session['username'] = r.username
-            return redirect(url_for('user.index', username=r.username))
+            if context['return_to'] is None:
+                redir_url = url_for('user.index', username=r.username)
+            else:
+                redir_url = context['return_to']
+            return redirect(redir_url)
         
         return render_template('login.html', **context)
 
@@ -97,6 +105,43 @@ def logout():
     # TODO: flash a 'logged out' message here
     session.pop('username', None)
     return redirect(url_for('index'))
+
+
+class AddExpApp(MethodView):
+    
+    form = AddExpAppForm
+    
+    def get_context(self, **kwargs):
+        form = self.form(request.form)
+        context = {'form': form}
+        return context
+    
+    def get(self, **kwargs):
+        context = self.get_context(**kwargs)
+        if not g.logged_in:
+            return redirect(url_for('login', return_to=request.base_url))
+        
+        return render_template('addexpapp.html', **context)
+    
+    def post(self, **kwargs):
+        context = self.get_context(**kwargs)
+        if not g.logged_in:
+            return redirect(url_for('login', return_to=request.base_url))
+        
+        g.context = context
+        form = context.get('form')
+        
+        if form.validate():
+            ea = ExpApp(ea_id=form.ea_id.data,
+                        description=form.description.data)
+            ea.owners.append(g.user)
+            ea.save()
+            return redirect(url_for('user.index', username=g.username))
+
+        return render_template('addexpapp.html', **context)
+
+
+app.add_url_rule('/addexpapp', view_func=AddExpApp.as_view('addexpapp'))
 
 
 @app.route('/about')

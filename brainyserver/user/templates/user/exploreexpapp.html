@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block page_header %}
+    <h1>{{ g.context['ea_id'] }} <small>{{ g.context['ea'].description }}</small></h1>
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="span6">
+      <div class="page-header">
+        <h2>Results</h2>
+      </div>
+      {% set results = g.context['ea'].results %}
+      {% if results|length == 0 %}
+      <p>No results have arrived yet.</p>
+      {% else %}
+      <table class="table table-condensed table-striped">
+        <thead>
+          <tr>
+            <th>Meta App hash (first 15 characters)</th>
+            <th>Upload date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for res in results|sort(attribute='created_at') %}
+          <tr>
+            <td>{{ res.metaappinstance.mai_id[:15] }}...</td>
+            <td>{{ res.created_at.strftime("%d/%m/%Y at %H:%M:%S") }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
