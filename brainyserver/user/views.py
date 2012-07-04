@@ -35,7 +35,7 @@ class Index(MethodView):
 user.add_url_rule('/', view_func=Index.as_view('index'))
 
 
-class Explore(MethodView):
+class ExploreExpApp(MethodView):
     
     def get_context(self, **kwargs):
         username = kwargs['username']
@@ -55,4 +55,5 @@ class Explore(MethodView):
         return render_template('user/exploreexpapp.html')
 
 
-user.add_url_rule('/<ea_id>', view_func=Explore.as_view('exploreexpapp'))
+user.add_url_rule('/<ea_id>',
+                  view_func=ExploreExpApp.as_view('exploreexpapp'))

@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 
+{% block page_title %}{{ g.context['username'] }} / {{ g.context['ea_id'] }}{% endblock %}
+
 {% block page_header %}
-    <h1>{{ g.context['ea_id'] }} <small>{{ g.context['ea'].description }}</small></h1>
+    <h1><small><a href={{ url_for('user.index', username=g.context['username']) }}>{{ g.context['username'] }}</a> / </small> {{ g.context['ea_id'] }} <small>{{ g.context['ea'].description }}</small></h1>
 {% endblock %}
 
 {% block content %}
