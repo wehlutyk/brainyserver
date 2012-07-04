@@ -9,7 +9,7 @@
       {% if field.name == "body" %}
         {{ field(rows=10, cols=40) }}
       {% else %}
-        {{ field() }}
+        {{ field(class_="span3") }}
       {% endif %}
       {% if field.errors or field.help_text %}
         <span class="help-inline">

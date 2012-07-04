@@ -29,7 +29,7 @@ class Index(MethodView):
         if Researcher.objects(username=username).count() == 0:
             abort(404)
         
-        return render_template('index.html')
+        return render_template('user/index.html')
 
 
 user.add_url_rule('/', view_func=Index.as_view('index'))
@@ -62,7 +62,7 @@ class AddExpApp(MethodView):
             ea.save()
             return redirect(url_for('.index', username=g.username))
 
-        return render_template('addexpapp.html', **context)
+        return render_template('user/addexpapp.html', **context)
 
 
 user.add_url_rule('/addexpapp', view_func=AddExpApp.as_view('addexpapp'))
