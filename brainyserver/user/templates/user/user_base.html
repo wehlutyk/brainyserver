@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+
+{% block page_header %}
+    <h1><small><a href={{ url_for('user.index', username=g.context['username']) }}>{{ g.context['username'] }}</a> / </small>{% block user_subtitle %}{% endblock %}</h1>
+{% endblock %}

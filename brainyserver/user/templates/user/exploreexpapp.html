@@ -1,32 +1,45 @@
-{% extends "base.html" %}
+{% extends "user/user_base.html" %}
 
 {% block page_title %}{{ g.context['username'] }} / {{ g.context['ea_id'] }}{% endblock %}
 
-{% block page_header %}
-    <h1><small><a href={{ url_for('user.index', username=g.context['username']) }}>{{ g.context['username'] }}</a> / </small> {{ g.context['ea_id'] }} <small>{{ g.context['ea'].description }}</small></h1>
-{% endblock %}
+{% block user_subtitle %}{{ g.context['ea_id'] }} <small>{{ g.context['ea'].description }}</small>{% endblock %}
 
 {% block content %}
   <div class="row">
     <div class="span6">
-      <div class="page-header">
-        <h2>Results</h2>
-      </div>
       {% set results = g.context['ea'].results %}
+      <div class="page-header">
+        <h2 class="inline">Results</h2>
+        {% if results|length != 0 %}
+        
+        <div class="btn-group pull-right">
+          <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+            <i class="icon-download-alt"></i> Download
+            <span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="#">As JSON</a></li>
+            <li><a href="#">As XML</a></li>
+            <li><a href="#">As CSV</a></li>
+            <li><a href="#">As SQLite</a></li>
+          </ul>
+        </div>
+        {% endif %}
+      </div>
       {% if results|length == 0 %}
       <p>No results have arrived yet.</p>
       {% else %}
       <table class="table table-condensed table-striped">
         <thead>
           <tr>
-            <th>Meta App hash (first 15 characters)</th>
+            <th>Meta App hash (first 40 characters)</th>
             <th>Upload date</th>
           </tr>
         </thead>
         <tbody>
-          {% for res in results|sort(attribute='created_at') %}
+          {% for res in results|sort(attribute='created_at', reverse=True) %}
           <tr>
-            <td>{{ res.metaappinstance.mai_id[:15] }}...</td>
+            <td>{{ res.metaappinstance.mai_id[:40] }}...</td>
             <td>{{ res.created_at.strftime("%d/%m/%Y at %H:%M:%S") }}</td>
           </tr>
           {% endfor %}
@@ -34,5 +47,20 @@
       </table>
       {% endif %}
     </div>
+    <div class="span6">
+      <div class="page-header">
+        <h2 class="inline">Previz of the results</h2>{% if g.context['ea'].previz_pjs == None %}<a class="btn btn-primary pull-right" href={{ url_for('.editpreviz', username=g.context['username'], ea_id=g.context['ea_id']) }}>Add a{% else %}<a class="btn pull-right" href={{ url_for('.editpreviz', username=g.context['username'], ea_id=g.context['ea_id']) }}>Modify the{% endif %} previz</a>
+      </div>
+      {% if g.context['ea'].previz_pjs == None %}
+      You haven't defined a previz yet.
+      {% else %}
+      <canvas data-processing-sources={{ url_for('static', filename='uploads/bittorrent.pde') }}></canvas>
+      {% endif %}
+    </div>
   </div>
+{% endblock %}
+
+{% block js_footer %}
+{{ super() }}
+<script src={{ url_for('static', filename='js/processing.min.js') }}></script> 
 {% endblock %}

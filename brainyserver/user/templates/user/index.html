@@ -1,14 +1,11 @@
-{% extends "base.html" %}
+{% extends "user/user_base.html" %}
 
 {% block page_title %}{{ g.context['username'] }}{% endblock %}
 
-{% block page_header %}
-  <div class="page-header">
-    <h1>{%- if g.context['username'] == g.username -%}Your apps <a class="btn btn-primary btn-large pull-right" href={{ url_for('addexpapp') }}>Add an app</a>{%- else -%}{{ g.context['username'] }}'s apps{%- endif -%}</h1>
-  </div>
-{% endblock %}
-
 {% block content %}
+  <div class="page-header">
+    <h1 class="inline">{%- if g.context['username'] == g.username -%}Your apps</h1><a class="btn btn-primary pull-right" href={{ url_for('addexpapp') }}>Add an app</a>{%- else -%}{{ g.context['username'] }}'s apps{%- endif -%}
+  </div>
   <div class="row">
     <div class="span12">
       {% set expapps = g.db.ExpApp.objects(owners=g.context['user']) %}

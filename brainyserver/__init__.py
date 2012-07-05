@@ -33,6 +33,7 @@ def before_request():
         g.user = mongodb.Researcher.objects(username=g.username).first()
     else:
         g.logged_in = False
+        g.user = None
         g.username = ''
 
 

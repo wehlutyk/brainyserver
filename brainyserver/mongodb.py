@@ -42,6 +42,7 @@ class ExpApp(mongo.Document):
     description = mongo.StringField(max_length=300)
     owners = mongo.ListField(mongo.ReferenceField(Researcher), required=True)
     results = mongo.ListField(mongo.EmbeddedDocumentField(Result))
+    previz_pjs = mongo.StringField()
 
 
 class MetaAppInstance(mongo.Document):
