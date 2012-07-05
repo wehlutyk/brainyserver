@@ -46,7 +46,7 @@ class ExpApp(mongo.Document):
 
 class MetaAppInstance(mongo.Document):
     mai_id = mongo.StringField(regex='^[a-zA-Z0-9_-]+$', required=True,
-                               unique=True, min_length=3, max_length=50)
+                               unique=True, min_length=3, max_length=150)
     pubkey_ec = mongo.StringField(max_length=5000, required=True)
 
 
