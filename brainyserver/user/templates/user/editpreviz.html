@@ -1,0 +1,22 @@
+{% extends "user/user_base.html" %}
+{% import "_forms.html" as forms %}
+
+{% block page_title %}{{ g.context['username'] }} / {{ g.context['ea_id'] }}{% endblock %}
+
+{% block user_subtitle %}{{ g.context['ea_id'] }} <small>{{ g.context['ea'].description }}</small>{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="span12">
+      <div class="page-header">
+        <h1>Edit your previz</h1>
+      </div>
+        <form action={{ url_for('.editpreviz', ea_id=g.context['ea_id'], username=g.username) }} method="post" class="well">
+          {{ forms.render(form, "span6") }}
+          <div class="actions">
+            <input type="submit" class="btn btn-primary" value="Submit">
+          </div>
+        </form>
+    </div>
+  </div>
+{% endblock %}

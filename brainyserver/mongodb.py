@@ -4,7 +4,6 @@
 """MongoDB documents."""
 
 
-import sys
 import datetime
 
 from brainyserver import mongo
@@ -26,7 +25,7 @@ class Researcher(mongo.Document):
         self.pwhash = pwhash
     
     def check_password(self, pw):
-        pwsalt, pwhash = encrypt_password(pw, str(self.pwsalt))
+        pwhash = encrypt_password(pw, str(self.pwsalt))[1]
         return pwhash == str(self.pwhash)
 
 
@@ -42,7 +41,7 @@ class ExpApp(mongo.Document):
     description = mongo.StringField(max_length=300)
     owners = mongo.ListField(mongo.ReferenceField(Researcher), required=True)
     results = mongo.ListField(mongo.EmbeddedDocumentField(Result))
-    previz_pjs = mongo.StringField()
+    previzpjs = mongo.StringField()
 
 
 class MetaAppInstance(mongo.Document):

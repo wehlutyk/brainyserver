@@ -75,7 +75,7 @@ def ea_data(mai_id, ea_id):
         return ('Unknown ExpApp (id=%s) -> no data '
                 'uploaded.\n') % ea_id
     
-    r = Result(**json.loads(datastring))
+    r = Result(data=json.loads(datastring))
     r.metaappinstance = mai
     ea.results.append(r)
     ea.save()

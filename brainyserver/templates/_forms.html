@@ -1,4 +1,4 @@
-{% macro render(form) -%}
+{% macro render(form, width="span3") -%}
 <fieldset>
 {% for field in form %}
 {{ form.hidden_tag() }}
@@ -9,7 +9,7 @@
       {% if field.name == "body" %}
         {{ field(rows=10, cols=40) }}
       {% else %}
-        {{ field(class_="span3") }}
+        {{ field(class_=width) }}
       {% endif %}
       {% if field.errors or field.help_text %}
         <span class="help-block">

@@ -48,19 +48,35 @@
       {% endif %}
     </div>
     <div class="span6">
-      <div class="page-header">
-        <h2 class="inline">Previz of the results</h2>{% if g.context['ea'].previz_pjs == None %}<a class="btn btn-primary pull-right" href={{ url_for('.editpreviz', username=g.context['username'], ea_id=g.context['ea_id']) }}>Add a{% else %}<a class="btn pull-right" href={{ url_for('.editpreviz', username=g.context['username'], ea_id=g.context['ea_id']) }}>Modify the{% endif %} previz</a>
+      <div class="page-header" id="previz-title">
+        <h2 class="inline">Previz of the results {% if g.context['ea'].previzpjs == None %}</h2><a class="btn btn-primary pull-right" href={{ url_for('.editpreviz', username=g.context['username'], ea_id=g.context['ea_id']) }}>Add a{% else %}<small id="loading-msg">data loading ...</small></h2><a class="btn pull-right" href={{ url_for('.editpreviz', username=g.context['username'], ea_id=g.context['ea_id']) }}>Modify the{% endif %} previz</a>
       </div>
-      {% if g.context['ea'].previz_pjs == None %}
+      {% if g.context['ea'].previzpjs == None %}
       You haven't defined a previz yet.
       {% else %}
-      <canvas data-processing-sources={{ url_for('static', filename='uploads/bittorrent.pde') }}></canvas>
+      <canvas id="previz" data-processing-sources={{ url_for('static', filename='uploads/bittorrent.pde') }}></canvas>
       {% endif %}
     </div>
   </div>
 {% endblock %}
 
+{% if g.context['ea'].previzpjs == None %}
 {% block js_footer %}
 {{ super() }}
 <script src={{ url_for('static', filename='js/processing.min.js') }}></script> 
+<script type="text/javascript">
+var data;
+var canvasWidth = Math.max($('#previz-title').innerWidth(), 300);
+var canvasHeight = canvasWidth;
+$.get("{{ url_for('.previzpjs', username=g.username, ea_id=g.context['ea_id']) }}", function(processingCode) {
+  var jsCode = Processing.compile(processingCode);
+  $.getJSON("{{ url_for('.data', username=g.username, ea_id=g.context['ea_id']) }}", function(jsonData) {
+    data = jsonData;
+    $('#loading-msg').html($('#loading-msg').html() + ' done.');
+    setTimeout(function() {$('#loading-msg').html('');}, 3000);
+    var processingInstance = new Processing(document.getElementById('previz'), jsCode);
+  });
+});
+</script>
 {% endblock %}
+{% endif %}
