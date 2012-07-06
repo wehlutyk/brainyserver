@@ -6,8 +6,8 @@
   <div class="clearfix {% if field.errors %}error{% endif %}">
     {{ field.label }}
     <div class="input">
-      {% if field.name == "body" %}
-        {{ field(rows=10, cols=40) }}
+      {% if field.name == "source" %}
+        {{ field(rows=20, class_=width) }}
       {% else %}
         {{ field(class_=width) }}
       {% endif %}

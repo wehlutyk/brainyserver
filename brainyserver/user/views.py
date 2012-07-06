@@ -4,6 +4,8 @@
 """User blueprint views."""
 
 
+import json
+
 from flask import render_template, g, abort, request, redirect, url_for
 from flask.views import MethodView
 
@@ -145,6 +147,20 @@ user.add_url_rule('/<ea_id>/previz.pjs',
                   view_func=PrevizPjs.as_view('previzpjs'))
 
 
+def dl_to_ld(dl):
+    """Convert a list of dicts to a dict of lists of values inside the
+    dicts."""
+    keys = set([])
+    for d in dl:
+        keys.update(d.keys())
+    
+    ld = dict((k, []) for k in keys)
+    for d in dl:
+        for k in keys:
+            ld[k].append(d.get(k))
+    
+    return ld
+
 class Data(MethodView):
     
     def get_context(self, **kwargs):
@@ -165,8 +181,8 @@ class Data(MethodView):
             g.user not in context['ea'].owners):
             abort(403)
         
-        #datajson = context['ea'].
-        return '{ "numbers": [4, 3, 7, 9, 2] }'
+        data = dl_to_ld([r.data for r in context['ea'].results])
+        return json.dumps(data)
 
 
 user.add_url_rule('/<ea_id>/data',
