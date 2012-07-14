@@ -23,6 +23,7 @@ def file_allowed(uploadset, f):
 @upload.route('/mai_pubkey/<mai_id>', methods=['POST'])
 def mai_pubkey(mai_id):
     """Process a public key uploaded for a MetaAppInstance."""
+    # pversion = request.args.get('pversion')
     pubkeyfile = request.files['pubkeyfile']
     
     if not pubkeyfile:
@@ -44,6 +45,7 @@ def mai_pubkey(mai_id):
 @upload.route('/ea_data/<mai_id>/<ea_id>', methods=['POST'])
 def ea_data(mai_id, ea_id):
     """Process data uploaded by a MetaAppInstance for an ExpApp."""
+    # pversion = request.args.get('pversion')
     datafile = request.files['datafile']
     sigfile = request.files['sigfile']
     
