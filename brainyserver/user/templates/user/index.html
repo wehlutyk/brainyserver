@@ -8,7 +8,7 @@
   </div>
   <div class="row">
     <div class="span12">
-      {% set expapps = g.db.ExpApp.objects(owners=g.context['user']) %}
+      {% set expapps = g.mongodb.ExpApp.objects(owners=g.context['user']) %}
       {% if expapps.count() == 0 %}
       <p>{%- if g.context['username'] == g.username -%}You haven't{%- else -%}{{ g.context.username }} hasn't{%- endif %} created any apps yet.</p>
       {% else %}

@@ -42,8 +42,8 @@ def mai_pubkey(mai_id):
     return 'Key saved.\n'
 
 
-@upload.route('/ea_data/<mai_id>/<ea_id>', methods=['POST'])
-def ea_data(mai_id, ea_id):
+@upload.route('/ea_data/<mai_id>/<name>', methods=['POST'])
+def ea_data(mai_id, name):
     """Process data uploaded by a MetaAppInstance for an ExpApp."""
     # pversion = request.args.get('pversion')
     datafile = request.files['datafile']
@@ -72,10 +72,10 @@ def ea_data(mai_id, ea_id):
     if not ecv.verify(datastring, sigfile):
         return 'Signature invalid -> no data uploaded.\n'
     
-    ea = ExpApp.objects(ea_id=ea_id).first()
+    ea = ExpApp.objects(name=name).first()
     if not ea:
-        return ('Unknown ExpApp (id=%s) -> no data '
-                'uploaded.\n') % ea_id
+        return ('Unknown ExpApp (name=%s) -> no data '
+                'uploaded.\n') % name
     
     r = Result(data=json.loads(datastring))
     r.metaappinstance = mai

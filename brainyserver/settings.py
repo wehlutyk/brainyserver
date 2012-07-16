@@ -1,7 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"Settings for the application."
+"""Settings for the application.
+
+Divides into:
+  * General Flask app settings
+  * Data upload settings
+  * MongoDB settings
+
+"""
 
 
 # Flask app settings

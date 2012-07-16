@@ -49,10 +49,12 @@
     </div>
     <div class="span6">
       <div class="page-header" id="previz-title">
-        <h2 class="inline">Previz of the results {% if g.context['ea'].previzpjs == None %}</h2><a class="btn btn-primary pull-right" href={{ url_for('.editpreviz', username=g.context['username'], ea_id=g.context['ea_id']) }}>Add a{% else %}<small id="loading-msg">data loading ...</small></h2><a class="btn pull-right" href={{ url_for('.editpreviz', username=g.context['username'], ea_id=g.context['ea_id']) }}>Modify the{% endif %} previz</a>
+        <h2 class="inline">Previz of the results {% if g.context['ea'].previzpjs == None %}</h2><a class="btn btn-primary pull-right" href={{ url_for('.editpreviz', username=g.context['username'], ea_id=g.context['ea_id']) }}>Add a{% else %}{% if results|length != 0 %}<small id="loading-msg">data loading ...</small>{% endif %}</h2><a class="btn pull-right" href={{ url_for('.editpreviz', username=g.context['username'], ea_id=g.context['ea_id']) }}>Modify the{% endif %} previz</a>
       </div>
       {% if g.context['ea'].previzpjs == None %}
       You haven't defined a previz yet.
+      {% elif results|length == 0 %}
+      <p>No results have arrived yet.</p>
       {% else %}
       <canvas id="previz" data-processing-sources={{ url_for('static', filename='uploads/bittorrent.pde') }}></canvas>
       {% endif %}
@@ -60,9 +62,10 @@
   </div>
 {% endblock %}
 
-{% if g.context['ea'].previzpjs == None %}
 {% block js_footer %}
 {{ super() }}
+
+{% if g.context['ea'].previzpjs %}
 <script src={{ url_for('static', filename='js/processing.min.js') }}></script> 
 <script type="text/javascript">
 var data;
@@ -78,5 +81,5 @@ $.get("{{ url_for('.previzpjs', username=g.username, ea_id=g.context['ea_id']) }
   });
 });
 </script>
-{% endblock %}
 {% endif %}
+{% endblock %}

@@ -42,9 +42,9 @@ class ExploreExpApp(MethodView):
     def get_context(self, **kwargs):
         username = kwargs['username']
         user = Researcher.objects(username=username).first()
-        ea_id = kwargs['ea_id']
-        ea = ExpApp.objects(ea_id=ea_id).first()
-        context = {'username': username, 'user': user, 'ea_id': ea_id,
+        ea_name = kwargs['ea_name']
+        ea = ExpApp.objects(ea_name=ea_name).first()
+        context = {'username': username, 'user': user, 'ea_name': ea_name,
                    'ea': ea}
         return context
     
@@ -61,7 +61,7 @@ class ExploreExpApp(MethodView):
         return render_template('user/exploreexpapp.html')
 
 
-user.add_url_rule('/<ea_id>',
+user.add_url_rule('/<ea_name>',
                   view_func=ExploreExpApp.as_view('exploreexpapp'))
 
 
@@ -72,13 +72,13 @@ class EditPreviz(MethodView):
     def get_context(self, **kwargs):
         username = kwargs['username']
         user = Researcher.objects(username=username).first()
-        ea_id = kwargs['ea_id']
-        ea = ExpApp.objects(ea_id=ea_id).first()
+        ea_name = kwargs['ea_name']
+        ea = ExpApp.objects(ea_name=ea_name).first()
         form = self.form(request.form)
         fdata = form.source.data
         form.source.data = fdata if fdata else ea.previzpjs
         context = {'form': form, 'username': username, 'user': user,
-                   'ea_id': ea_id, 'ea': ea}
+                   'ea_name': ea_name, 'ea': ea}
         return context
     
     def get(self, **kwargs):
@@ -108,14 +108,15 @@ class EditPreviz(MethodView):
         if form.validate():
             context['ea'].previzpjs = form.source.data
             context['ea'].save()
-            return redirect(url_for('.exploreexpapp', ea_id=context['ea_id'],
+            return redirect(url_for('.exploreexpapp',
+                                    ea_name=context['ea_name'],
                                     username=g.username))
 
         return render_template('user/editpreviz.html', **context)
 
 
 
-user.add_url_rule('/<ea_id>/edit/previz',
+user.add_url_rule('/<ea_name>/edit/previz',
                   view_func=EditPreviz.as_view('editpreviz'))
 
 
@@ -124,9 +125,9 @@ class PrevizPjs(MethodView):
     def get_context(self, **kwargs):
         username = kwargs['username']
         user = Researcher.objects(username=username).first()
-        ea_id = kwargs['ea_id']
-        ea = ExpApp.objects(ea_id=ea_id).first()
-        context = {'username': username, 'user': user, 'ea_id': ea_id,
+        ea_name = kwargs['ea_name']
+        ea = ExpApp.objects(ea_name=ea_name).first()
+        context = {'username': username, 'user': user, 'ea_name': ea_name,
                    'ea': ea}
         return context
     
@@ -143,7 +144,7 @@ class PrevizPjs(MethodView):
         return previzpjs if previzpjs else '// No previz found'
 
 
-user.add_url_rule('/<ea_id>/previz.pjs',
+user.add_url_rule('/<ea_name>/previz.pjs',
                   view_func=PrevizPjs.as_view('previzpjs'))
 
 
@@ -166,9 +167,9 @@ class Data(MethodView):
     def get_context(self, **kwargs):
         username = kwargs['username']
         user = Researcher.objects(username=username).first()
-        ea_id = kwargs['ea_id']
-        ea = ExpApp.objects(ea_id=ea_id).first()
-        context = {'username': username, 'user': user, 'ea_id': ea_id,
+        ea_name = kwargs['ea_name']
+        ea = ExpApp.objects(ea_name=ea_name).first()
+        context = {'username': username, 'user': user, 'ea_name': ea_name,
                    'ea': ea}
         return context
     
@@ -185,5 +186,5 @@ class Data(MethodView):
         return json.dumps(data)
 
 
-user.add_url_rule('/<ea_id>/data',
+user.add_url_rule('/<ea_name>/data',
                   view_func=Data.as_view('data'))
