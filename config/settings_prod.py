@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Settings for the application.
+"""Settings for the application in default mode, i.e. production mode.
 
 Divides into:
   * General Flask app settings
@@ -14,7 +14,9 @@ Divides into:
 # Flask app settings
 
 SECRET_KEY = 'development key'
-DEBUG_TB_INTERCEPT_REDIRECTS = False
+DEBUG = False
+TESTING = False
+HOST = '0.0.0.0'
 
 
 # Data uploading settings

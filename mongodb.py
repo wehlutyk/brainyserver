@@ -15,7 +15,8 @@ Classes:
 
 import datetime
 
-from brainyserver import mongo
+import mongoengine as mongo
+
 from brainyserver.crypto import encrypt_password
 
 

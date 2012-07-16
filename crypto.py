@@ -95,6 +95,7 @@ class ECVerifier(object):
     def verify(self, datastring, sigfile):
         """Verify a signature allegedly performed by our MetaAppInstance."""
         digest = sha512_hash(datastring)
+        sigfile.seek(0)
         sig = sigfile.read()
         return sum([bool(ec.verify_dsa_asn1(digest, sig))
                     for ec in self._ecs])

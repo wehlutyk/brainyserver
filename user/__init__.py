@@ -6,8 +6,6 @@
 
 from flask import Blueprint
 
-from brainyserver import app
-
 
 user = Blueprint('user', __name__, template_folder='templates')
 

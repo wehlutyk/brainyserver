@@ -25,20 +25,17 @@ from abc import abstractproperty, abstractmethod
 from flask import render_template, request, redirect, url_for, session, g
 from flask.views import MethodView, MethodViewType
 
-from brainyserver import app
 from brainyserver.forms import RegisterForm, LoginForm, AddExpAppForm
 import brainyserver.mongodb as mongodb
 from brainyserver.mongodb import Researcher, ExpApp
 from brainyserver.loggedstatus import LoggedStatus, log_user_in, log_user_out
 
 
-@app.before_request
 def before_request_mongodb():
     """Store the mondodb object in g."""
     g.mongodb = mongodb
 
 
-@app.before_request
 def before_request_loggedstatus():
     """Store the LoggedStatus object in g."""
     username = session.get('username')
@@ -259,10 +256,14 @@ class Contact(MethodView):
         return render_template('contact.html')
 
 
-app.add_url_rule('/', view_func=Index.as_view('index'))
-app.add_url_rule('/register', view_func=Register.as_view('register'))
-app.add_url_rule('/login', view_func=Login.as_view('login'))
-app.add_url_rule('/logout', view_func=Logout.as_view('logout'))
-app.add_url_rule('/addexpapp', view_func=AddExpApp.as_view('addexpapp'))
-app.add_url_rule('/about', view_func=About.as_view('about'))
-app.add_url_rule('/contact', view_func=Contact.as_view('contact'))
+def configure_frontend_app(app):
+    app.before_request(before_request_mongodb)
+    app.before_request(before_request_loggedstatus)
+    
+    app.add_url_rule('/', view_func=Index.as_view('index'))
+    app.add_url_rule('/register', view_func=Register.as_view('register'))
+    app.add_url_rule('/login', view_func=Login.as_view('login'))
+    app.add_url_rule('/logout', view_func=Logout.as_view('logout'))
+    app.add_url_rule('/addexpapp', view_func=AddExpApp.as_view('addexpapp'))
+    app.add_url_rule('/about', view_func=About.as_view('about'))
+    app.add_url_rule('/contact', view_func=Contact.as_view('contact'))

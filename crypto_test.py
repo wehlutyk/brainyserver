@@ -4,9 +4,15 @@
 """Tests for the crypto module."""
 
 
+import tempfile
 import unittest
 from hashlib import sha512
 
+from pymongo import Connection
+from M2Crypto import EC, BIO
+
+from brainyserver import create_app
+from brainyserver.mongodb import MetaAppInstance
 import brainyserver.crypto as crypto
 
 
@@ -63,7 +69,52 @@ class PasswordTestCase(unittest.TestCase):
         assert enc1_test != enc2
 
 
-suite = unittest.defaultTestLoader.loadTestsFromTestCase(PasswordTestCase)
+class ECVerifyerTestCase(unittest.TestCase):
+    
+    testdata1 = 'test data to sign'
+    testdata2 = 'other data'
+    test_mai_id = 'testmai'
+    ec_name = EC.NID_secp112r1
+    
+    def setUp(self):
+        self.app = create_app('testing')
+        
+        self.ec1 = EC.gen_params(self.ec_name)
+        self.ec1.gen_key()
+        bio1 = BIO.MemoryBuffer()
+        self.ec1.save_pub_key_bio(bio1)
+        
+        self.mai = MetaAppInstance(mai_id=self.test_mai_id,
+                                   pubkey_ec=bio1.getvalue())
+        self.mai.save()
+        
+        self.ec2 = EC.gen_params(self.ec_name)
+        self.ec2.gen_key()
+        
+        self.verifyer = crypto.ECVerifier(self.mai)
+        
+        self.sha = sha512()
+        self.temp = tempfile.TemporaryFile()
+    
+    def tearDown(self):
+        mongoco = Connection()
+        mongoco.drop_database(self.app.config['MONGODB_DB'])
+        self.temp.close()
+    
+    def test_signature(self):
+        self.sha.update(self.testdata1)
+        sig1 = self.ec1.sign_dsa_asn1(self.sha.digest())
+        self.temp.write(sig1)
+        
+        assert self.verifyer.verify(self.testdata1, self.temp) == True
+        assert self.verifyer.verify(self.testdata2, self.temp) == False
+    
+    def test_other_signature(self):
+        self.sha.update(self.testdata1)
+        sig2 = self.ec2.sign_dsa_asn1(self.sha.digest())
+        self.temp.write(sig2)
+        
+        assert self.verifyer.verify(self.testdata1, self.temp) == False
 
 
 if __name__ == '__main__':
